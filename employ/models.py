@@ -1,6 +1,11 @@
 from django.db import models
 
 
+class CustomerQuerySet(models.query.QuerySet):
+    """自定义QuerySet，提高模型类的可用性"""
+    pass
+
+
 class Employees(models.Model):
     emp_no = models.IntegerField(primary_key=True)
     birth_date = models.DateField()
@@ -8,6 +13,17 @@ class Employees(models.Model):
     last_name = models.CharField(max_length=16)
     gender = models.CharField(max_length=1)
     hire_date = models.DateField()
+
+    objects = CustomerQuerySet.as_manager()
+
+    def listJson(self):
+        return {
+            "birth_date": self.birth_date,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "gender": self.gender,
+            "hire_date": self.hire_date
+        }
 
     class Meta:
         db_table = 'employees'
